@@ -38,7 +38,7 @@ def main(**kwargs):
                 print("Scraping comments")
 
                 if not driver:
-                    driver = load_driver()
+                    driver = load_driver(existing_profile=True)
 
                 driver.get(post)
                 sleep(2)
@@ -185,7 +185,7 @@ def load_driver(driver="Firefox", existing_profile=False, profile=None):
 
             if not profile:
                 profiles_folder = os.path.expandvars("%APPDATA%\\Mozilla\\Firefox\\Profiles")
-                profile = os.path.join(profiles_folder, os.listdir(profiles_folder)[0])  # Selecting first profile in the folder
+                profile = os.path.join(profiles_folder, os.listdir(profiles_folder)[1])  # Selecting first profile in the folder
 
             firefox_profile = webdriver.FirefoxProfile(profile_directory=profile)
             driver = webdriver.Firefox(firefox_profile)
