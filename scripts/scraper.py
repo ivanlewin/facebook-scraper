@@ -337,17 +337,17 @@ reactions_mobile = 'https://m.facebook.com/ufi/reaction/profile/browser/?ft_ent_
 
 r_post_mobile = requests.get(post_mobile)
 r_post_desktop = requests.get(post_desktop)
-r_reactions_mobile = requests.get(reactions_mobile)
+r_reactions_mobile = requests.get(reactions_mobile)  # No sirve
 
-with open("response_post_mobile.html", "w+", encoding="utf-8") as f:
+with open("response_post_mobile.html", "w", encoding="utf-8") as f:
     f.write(r_post_mobile.text)
-with open("response_post_desktop.html", "w+", encoding="utf-8") as f:
+with open("response_post_desktop.html", "w", encoding="utf-8") as f:
     f.write(r_post_desktop.text)
-with open("response_reactions_mobile.html", "w+", encoding="utf-8") as f:
+with open("response_reactions_mobile.html", "w", encoding="utf-8") as f:
     f.write(r_reactions_mobile.text)
 
 driver.get(post_mobile)
 driver.get(post_desktop)
 driver.get(reactions_mobile)
-with open("page_source_post_mobile.html", "w+", encoding="utf-8") as f:
+with open("page_source_reactions_mobile.html", "w", encoding="utf-8") as f:
     f.write(driver.page_source)
