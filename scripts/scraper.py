@@ -89,12 +89,13 @@ def read_posts():
 
 
 def bs4_parse(response_html):
+def bs4_parse(html):
 
     # Initialize dataframe instance, and set post metadata to None
     post_df = pd.DataFrame()
     post_comments_count = post_caption = post_ig_id = post_is_comment_enabled = post_like_count = post_media_type = post_owner = post_shortcode = post_timestamp = post_username = post_views_count = post_location = post_location_id = None
 
-    soup = BeautifulSoup(response_html, "html.parser")
+    soup = BeautifulSoup(html, "html.parser")
 
     # Search for a script that contains the post metadata
     for script in soup.select("script[type='text/javascript']"):
