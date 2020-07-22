@@ -21,7 +21,7 @@ def main(**kwargs):
     
     post_dict = read_posts()
     
-    driver = None # Initialize driver to None to check for it before loading it (before driver.get(post))
+    driver = load_driver(existing_profile=True)
 
     for user in post_dict:
         
@@ -30,18 +30,12 @@ def main(**kwargs):
         for post in post_dict[user]:
             print(f"User: {user} | Post {post_dict[user].index(post)+1}/{len(post_dict[user])}")
 
-            # make html request and parse with bs4
-            r = requests.get(post)
-            post_df = bs4_parse(r.text)
+            mobile_post = to_mobile(post)
+            driver.get(mobile_post)
+            post_df = bs4_parse(driver.page_source)
 
             if comments:
                 print("Scraping comments")
-
-                if not driver:
-                    driver = load_driver(existing_profile=True)
-
-                driver.get(post)
-                sleep(2)
                 comments_df = scrape_comments(driver, replies=replies)
 
                 try:
@@ -51,11 +45,13 @@ def main(**kwargs):
                 except ValueError:  # Empty df
                     pass
 
+            if reactions:
+                pass
+
             save_dataframe(post_df, dest_path)
             print(f"Database saved: {dest_path}\n")
     
-    if driver:
-        driver.quit()
+    driver.quit()
 
         
 def read_config():
@@ -88,7 +84,10 @@ def read_posts():
     return posts
 
 
-def bs4_parse(response_html):
+def tomobile(post_url):
+    pass
+
+
 def bs4_parse(html):
 
     # Initialize dataframe instance, and set post metadata to None
