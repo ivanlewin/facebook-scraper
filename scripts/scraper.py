@@ -134,7 +134,8 @@ def analyze_url(url):
 
 
 def get_mobile_post(driver, url):
-    pass
+    driver.get(url.replace("www.facebook.com", "m.facebook.com"))
+    return driver
 
 
 def bs4_parse(html):
