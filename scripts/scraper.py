@@ -292,25 +292,15 @@ def scrape_comments(driver, replies=False):
                 last_comment = preceding_comment
 
     def load_replies():
-        try:
-            view_replies_buttons = driver.find_elements_by_css_selector(".y3zKF")
-
-            for button in view_replies_buttons:
-
-                try:
-                    driver.execute_script("arguments[0].scrollIntoView();", button)
-
-                    text = button.text
-                    while "Ver" in text or "View" in text:
-                        button.click()
-                        sleep(0.5)
-                        text = button.text
-
-                except (StaleElementReferenceException, ElementClickInterceptedException):
-                    pass
-
-        except (NoSuchElementException):
-            pass
+        """Clickea todos los botones de 'x reply(ies)' hasta que no encuentre ninguno."""
+        while True:
+            try:
+                view_replies_buttons = driver.find_element_by_css_selector("div[id*='comment_replies_more_']")
+                driver.execute_script("arguments[0].scrollIntoView();", view_replies_buttons)
+                view_replies_buttons.click()
+                sleep(2)
+            except (NoSuchElementException):
+                break
 
     def get_comment_info(comment):
 
