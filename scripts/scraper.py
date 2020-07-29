@@ -138,7 +138,7 @@ def get_mobile_post(driver, url):
     return driver
 
 
-def bs4_parse(html):
+def parse_post(html):
 
     # Initialize dataframe instance, and set post metadata to None
     post_df = pd.DataFrame()
