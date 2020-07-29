@@ -62,11 +62,14 @@ def read_config():
 
     comments = config.getboolean("comments", "scrape_comments")
     replies = config.getboolean("comments", "scrape_replies")
+    reactions = config.getboolean("comments", "scrape_reactions")
+
     custom_folder = config.get("output", "output_folder")
 
     settings = {
         "comments": comments,
         "replies": replies,
+        "reactions": reactions,
         "custom_folder":  custom_folder if custom_folder else None,
     }
 
