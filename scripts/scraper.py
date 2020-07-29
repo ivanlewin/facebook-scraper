@@ -275,95 +275,98 @@ def load_driver(driver="Firefox", existing_profile=False, profile=None):
     return driver
 
 
-def scrape_comments(driver, replies=False):
+def load_all_comments(driver):
+    """Clickea el boton de "View more comments" hasta que no encuentre nuevos comments."""
+    last_comment = None
+    while True:
+        # boton al final de todo
+        view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
+        # hacer scroll hasta que este enfocado y clickearlo
+        driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
+        view_more_comments.click()
+        sleep(2)
 
-    def load_comments():
-        """Clickea el boton de "View more comments" hasta que no encuentre nuevos comments."""
-        last_comment = None
-        while True:
-            # boton al final de todo
-            view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
-            # hacer scroll hasta que este enfocado y clickearlo
-            driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
-            view_more_comments.click()
-            sleep(2)
+        # el boton no desaparece cuando ya no hay comentarios; sigue funcionando pero no hace nada
+        
+        # scrollear hasta el boton
+        view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
+        driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
 
-            # el boton no desaparece cuando ya no hay comentarios; sigue funcionando pero no hace nada
-            
-            # scrollear hasta el boton
-            view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
-            driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
+        # chequear el comentario inmediatamente anterior al boton para ver si cambio
+        preceding_comment = view_more_comments.find_element_by_xpath("./preceding-sibling::*[1][@class='_2a_i']")
 
-            # chequear el comentario inmediatamente anterior al boton para ver si cambio
-            preceding_comment = view_more_comments.find_element_by_xpath("./preceding-sibling::*[1][@class='_2a_i']")
+        # chequear que el ultimo comment no sea igual al ultimo guardado
+        if preceding_comment == last_comment:
+            break
+        else:
+            last_comment = preceding_comment
 
-            # chequear que el ultimo comment no sea igual al ultimo guardado
-            if preceding_comment == last_comment:
-                break
-            else:
-                last_comment = preceding_comment
 
-    def load_replies():
-        """Clickea todos los botones de 'x reply(ies)' hasta que no encuentre ninguno."""
-        while True:
-            try:
-                view_replies_buttons = driver.find_element_by_css_selector("div[id*='comment_replies_more_']")
-                driver.execute_script("arguments[0].scrollIntoView();", view_replies_buttons)
-                view_replies_buttons.click()
-                sleep(2)
-            except (NoSuchElementException):
-                break
-
-    def get_comment_info(comment):
-
-        comment_id = comment_reply_count = comment_created_time = comment_from = comment_like_count = comment_message = comment_parent = None
-
+def load_all_replies(driver):
+    """Clickea todos los botones de 'x reply(ies)' hasta que no encuentre ninguno."""
+    while True:
         try:
-            comment_from = comment.find_element_by_css_selector("h3 a").text
-            comment_message = comment.find_element_by_css_selector("div[data-commentid]").text
+            view_replies_buttons = driver.find_element_by_css_selector("div[id*='comment_replies_more_']")
+            driver.execute_script("arguments[0].scrollIntoView();", view_replies_buttons)
+            view_replies_buttons.click()
+            sleep(2)
+        except (NoSuchElementException):
+            break
 
-            info = comment.find_element_by_css_selector(".aGBdT > div")
 
-            permalink = info.find_element_by_css_selector("a")
-            m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
-            comment_id = m[1]
-            comment_parent = m[2]
+def get_comment_info(comment):
 
-            comment_created_time = info.find_element_by_tag_name("time").get_attribute("datetime")
-            comment_created_time = datetime.strptime(comment_created_time, r"%Y-%m-%dT%H:%M:%S.%fZ")
+    comment_id = comment_reply_count = comment_created_time = comment_from = comment_like_count = comment_message = comment_parent = None
 
-            likes = info.find_element_by_css_selector("button.FH9sR").text
-            m = re.match(r"(\d+)", likes)
-            if m:
-                comment_like_count = int(m[0])
-            else:
-                comment_like_count = 0
+    try:
+        comment_from = comment.find_element_by_css_selector("h3 a").text
+        comment_message = comment.find_element_by_css_selector("div[data-commentid]").text
 
-        except NoSuchElementException:
-            pass
+        info = comment.find_element_by_css_selector(".aGBdT > div")
 
-        comment_df = pd.DataFrame({
-            "c_from": [comment_from],
-            "c_created_time": [comment_created_time],
-            "c_message": [comment_message],
-            "c_like_count": [comment_like_count],
-            "c_reply_count": [comment_reply_count],
-            "c_id": [comment_id],
-            "c_parent": [comment_parent],
-        })
+        permalink = info.find_element_by_css_selector("a")
+        m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
+        comment_id = m[1]
+        comment_parent = m[2]
 
-        comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
+        comment_created_time = info.find_element_by_tag_name("time").get_attribute("datetime")
+        comment_created_time = datetime.strptime(comment_created_time, r"%Y-%m-%dT%H:%M:%S.%fZ")
 
-        return comment_df
+        likes = info.find_element_by_css_selector("button.FH9sR").text
+        m = re.match(r"(\d+)", likes)
+        if m:
+            comment_like_count = int(m[0])
+        else:
+            comment_like_count = 0
+
+    except NoSuchElementException:
+        pass
+
+    comment_df = pd.DataFrame({
+        "c_from": [comment_from],
+        "c_created_time": [comment_created_time],
+        "c_message": [comment_message],
+        "c_like_count": [comment_like_count],
+        "c_reply_count": [comment_reply_count],
+        "c_id": [comment_id],
+        "c_parent": [comment_parent],
+    })
+
+    comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
+
+    return comment_df
+
+
+def scrape_comments(driver, replies=False):
 
     comments_df = pd.DataFrame()
 
-    load_comments()
+    load_all_comments()
     if replies:
-        load_replies()
+        load_all_replies()
 
     try:
-        for comment in driver.find_elements_by_css_selector("._2a_i ._14v5"):
+        for comment in soup.select("._2a_i ._14v5"):
             driver.execute_script("arguments[0].scrollIntoView();", comment)
             comment_df = get_comment_info(comment)
             comments_df = pd.concat([comments_df, comment_df])
