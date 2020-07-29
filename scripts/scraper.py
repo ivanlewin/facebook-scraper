@@ -152,8 +152,8 @@ def bs4_parse(html):
     if comments_count : post_comments_count = int(comments_count)
 
     try:
-        post_caption = post_json["edge_media_to_caption"]["edges"][0]["node"]["text"]
-    except IndexError:  # No caption
+        post_caption = soup.select('._5rgt._5nk5')[0].text
+    except (IndexError, TypeError):  # No caption
         pass
 
     post_ig_id = post_json.get("id")
