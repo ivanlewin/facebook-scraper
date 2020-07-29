@@ -30,13 +30,18 @@ def main(**kwargs):
         for post in post_dict[user]:
             print(f"User: {user} | Post {post_dict[user].index(post)+1}/{len(post_dict[user])}")
 
-            url_dict = analyze_url(post)
+            # url_dict = analyze_url(post)
 
             driver = get_mobile_post(driver, post)
-            post_df = bs4_parse(driver.page_source)
 
             if comments:
-                print("Scraping comments")
+                print("Loading comments")
+                load_all_comments(driver)
+
+                if replies:
+                    print("Loading replies")
+                    load_all_replies()
+
                 comments_df = scrape_comments(driver, replies=replies)
 
                 try:
@@ -49,6 +54,7 @@ def main(**kwargs):
             if reactions:
                 pass
 
+            post_df = parse_post(driver.page_source)
             save_dataframe(post_df, dest_path)
             print(f"Database saved: {dest_path}\n")
 
