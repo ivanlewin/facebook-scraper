@@ -208,24 +208,20 @@ def parse_post(html):
         post_media_type = "VIDEO"
 
     post_views_count = post_json.get("video_view_count")
-
+    
     # Fill dataframe with values, which will be None if not found
     post_df["p_comments_count"] = [post_comments_count]
     post_df["p_caption"] = [post_caption]
     # post_df["p_id"] = [post_id]
-    post_df["p_ig_id"] = [post_ig_id]
-    post_df["p_is_comment_enabled"] = [post_is_comment_enabled]
+    post_df["p_id"] = [post_id]
     post_df["p_like_count"] = [post_like_count]
-    post_df["p_media_type"] = [post_media_type]
+    post_df["p_shares_count"] = [post_shares_count]
     # post_df["p_media_url"] = [post_media_url]
     post_df["p_owner"] = [post_owner]
     # post_df["p_permalink"] = [post_permalink]
-    post_df["p_shortcode"] = [post_shortcode]
     post_df["p_timestamp"] = [post_timestamp]
     post_df["p_username"] = [post_username]
     post_df["p_views_count"] = [post_views_count]
-    post_df["p_location"] = [post_location]
-    post_df["p_location_id"] = [post_location_id]
 
     post_df = post_df.astype({"p_ig_id": object, "p_owner": object, "p_location_id": object})
 
