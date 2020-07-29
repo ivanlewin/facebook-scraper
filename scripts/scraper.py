@@ -388,24 +388,3 @@ def get_file_path(prefix, output_folder, timestamp=datetime.now().strftime(r"%Y%
 if __name__ == "__main__":
     config = read_config()
     # main(**config)
-
-post_mobile = 'https://m.facebook.com/DonaldTrump/posts/10165125042920725'
-post_desktop = 'https://www.facebook.com/DonaldTrump/posts/10165125042920725'
-reactions_mobile = 'https://m.facebook.com/ufi/reaction/profile/browser/?ft_ent_identifier=10165125042920725'
-
-r_post_mobile = requests.get(post_mobile)
-r_post_desktop = requests.get(post_desktop)
-r_reactions_mobile = requests.get(reactions_mobile)  # No sirve
-
-with open("response_post_mobile.html", "w", encoding="utf-8") as f:
-    f.write(r_post_mobile.text)
-with open("response_post_desktop.html", "w", encoding="utf-8") as f:
-    f.write(r_post_desktop.text)
-with open("response_reactions_mobile.html", "w", encoding="utf-8") as f:
-    f.write(r_reactions_mobile.text)
-
-driver.get(post_mobile)
-driver.get(post_desktop)
-driver.get(reactions_mobile)
-with open("page_source_reactions_mobile.html", "w", encoding="utf-8") as f:
-    f.write(driver.page_source)
