@@ -183,6 +183,9 @@ def bs4_parse(html):
             timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
             post_timestamp = datetime.fromtimestamp(int(timestamp))
 
+            # selector para post_timestamp con request del posteo version desktop
+            # a._5pcq > abbr[data-utime]
+
     except (IndexError, TypeError):
         print("Error: post_id, post_owner, post_timestamp")
 
