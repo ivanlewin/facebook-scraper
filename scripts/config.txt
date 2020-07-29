@@ -1,9 +1,12 @@
 [comments]
 scrape_comments = False
 
-# requires scrape_comments = True
-scrape_replies = True
+# (requiere scrape_comments = True)
+scrape_replies = False
+
+# (requiere scrape_comments = True)
+scrape_reactions = False
 
 [output]
-# relative to instagram-scraper directory, if empty: default = './csv'
+# path relativa al directorio facebook-scraper, valor por defecto = './csv'
 output_folder = 
