@@ -50,10 +50,10 @@ def main(**kwargs):
 
             save_dataframe(post_df, dest_path)
             print(f"Database saved: {dest_path}\n")
-    
+
     driver.quit()
 
-        
+
 def read_config():
 
     config = ConfigParser()
@@ -66,7 +66,7 @@ def read_config():
     settings = {
         "comments": comments,
         "replies": replies,
-        "custom_folder" : custom_folder if custom_folder else None,
+        "custom_folder":  custom_folder if custom_folder else None,
     }
 
     return settings
@@ -162,7 +162,7 @@ def bs4_parse(html):
     post_df["p_location"] = [post_location]
     post_df["p_location_id"] = [post_location_id]
 
-    post_df = post_df.astype({"p_ig_id" : object, "p_owner" : object, "p_location_id" : object})
+    post_df = post_df.astype({"p_ig_id": object, "p_owner": object, "p_location_id": object})
 
     return post_df
 
@@ -281,7 +281,7 @@ def scrape_comments(driver, replies=False):
             "c_reply_id": [comment_reply_id],
         })
 
-        comment_df = comment_df.astype({"c_id" : object, "c_reply_id" : object})
+        comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
 
         return comment_df
 
