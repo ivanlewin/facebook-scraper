@@ -184,14 +184,14 @@ def bs4_parse(html):
         print("Error: post_id, post_owner, post_timestamp")
 
     media_type = post_json.get("__typename")
-    if media_type == "GraphImage": post_media_type = "IMAGE"
-    elif media_type == "GraphSidecar": post_media_type = "CAROUSEL_ALBUM"
-    elif media_type == "GraphVideo": post_media_type = "VIDEO"
+    if media_type == "GraphImage":
+        post_media_type = "IMAGE"
+    elif media_type == "GraphSidecar":
+        post_media_type = "CAROUSEL_ALBUM"
+    elif media_type == "GraphVideo":
+        post_media_type = "VIDEO"
 
     post_views_count = post_json.get("video_view_count")
-    
-    timestamp = post_json.get("taken_at_timestamp")
-    if timestamp: post_timestamp = datetime.fromtimestamp(timestamp)
 
     # Fill dataframe with values, which will be None if not found
     post_df["p_comments_count"] = [post_comments_count]
