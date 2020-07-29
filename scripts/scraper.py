@@ -1,12 +1,11 @@
 import json
 import os
 import pandas as pd
-import requests
+import re
 from bs4 import BeautifulSoup
 from configparser import ConfigParser
 from datetime import datetime
 from pandas.errors import EmptyDataError
-from re import match, search
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, ElementClickInterceptedException
 from time import sleep
@@ -313,7 +312,7 @@ def scrape_comments(driver, replies=False):
             info = comment.find_element_by_css_selector(".aGBdT > div")
 
             permalink = info.find_element_by_css_selector("a")
-            m = match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
+            m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
             comment_id = m[1]
             comment_reply_id = m[2]
 
@@ -322,7 +321,7 @@ def scrape_comments(driver, replies=False):
             # comment_timestamp = datetime.timestamp(comment_timestamp)
 
             likes = info.find_element_by_css_selector("button.FH9sR").text
-            m = match(r"(\d+)", likes)
+            m = re.match(r"(\d+)", likes)
             if m:
                 comment_like_count = int(m[0])
             else:
