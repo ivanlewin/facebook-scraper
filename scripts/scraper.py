@@ -390,8 +390,11 @@ def save_dataframe(df, path):
 
 def get_file_path(prefix, output_folder, timestamp=datetime.now().strftime(r"%Y%m%d")):
 
-    # use output_folder if it's not None, else default folder
-    folder = os.path.abspath(output_folder) if output_folder else os.path.abspath("./csv")
+    # use custom output_folder if there's one, else default folder
+    if output_folder:
+        folder = os.path.abspath(output_folder)
+    else:
+        folder = os.path.abspath("./csv")
 
     if not os.path.exists(folder):
         os.mkdir(folder)
