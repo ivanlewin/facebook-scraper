@@ -19,10 +19,10 @@ def main(**kwargs):
     replies = kwargs.get("replies")
     reactions = kwargs.get("reactions")
     output_folder = kwargs.get("custom_folder")
-    
+
     post_dict = read_posts()
-    
-    driver = load_driver(existing_profile=True)
+
+    driver = load_driver(driver="Chrome", existing_profile=True)
 
     for user in post_dict:
         
