@@ -5,10 +5,13 @@
 * 2: Love - Me encanta
 * 3: Wow - Me asombra
 * 4: Haha - Me divierte
+<!-- * 5: Yay -  -->
 * 7: Sad - Me entristece
-* 8: Anger - Me enoja
-* 16:  Care - Me importa
-
+* 8: Angry - Me enoja
+* 10: Confused - 
+* 11: Thankful - 
+* 12: Pride - 
+* 16: Care - Me importa
 
 <!-- https://developers.facebook.com/docs/graph-api/reference/post/   -->
 <!-- https://developers.facebook.com/docs/graph-api/reference/v7.0/comment -->
