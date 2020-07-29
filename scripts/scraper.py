@@ -156,7 +156,12 @@ def bs4_parse(html):
     except (IndexError, TypeError):  # No caption
         pass
 
-    post_ig_id = post_json.get("id")
+    try:
+        shares = soup.select('div._43lx._55wr a')[0]
+        shares = re.search(r'(\d+)', shares.string)[0]
+        post_shares_count = int(shares)
+    except (IndexError, TypeError):
+        print("Error: post_shares_count")
 
     comments_enabled = post_json.get("comments_disabled")
     if comments_enabled != None : post_is_comment_enabled = not(comments_enabled)
