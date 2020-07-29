@@ -303,22 +303,21 @@ def scrape_comments(driver, replies=False):
 
     def get_comment_info(comment):
 
-        comment_id = comment_reply_id = comment_timestamp = comment_username = comment_text = comment_like_count = None
+        comment_id = comment_reply_count = comment_created_time = comment_from = comment_like_count = comment_message = comment_parent = None
 
         try:
-            comment_username = comment.find_element_by_css_selector("h3 a").text
-            comment_text = comment.find_element_by_css_selector("span:not([class*='coreSpriteVerifiedBadgeSmall'])").text
+            comment_from = comment.find_element_by_css_selector("h3 a").text
+            comment_message = comment.find_element_by_css_selector("div[data-commentid]").text
 
             info = comment.find_element_by_css_selector(".aGBdT > div")
 
             permalink = info.find_element_by_css_selector("a")
             m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
             comment_id = m[1]
-            comment_reply_id = m[2]
+            comment_parent = m[2]
 
-            comment_timestamp = info.find_element_by_tag_name("time").get_attribute("datetime")
-            comment_timestamp = datetime.strptime(comment_timestamp, r"%Y-%m-%dT%H:%M:%S.%fZ")
-            # comment_timestamp = datetime.timestamp(comment_timestamp)
+            comment_created_time = info.find_element_by_tag_name("time").get_attribute("datetime")
+            comment_created_time = datetime.strptime(comment_created_time, r"%Y-%m-%dT%H:%M:%S.%fZ")
 
             likes = info.find_element_by_css_selector("button.FH9sR").text
             m = re.match(r"(\d+)", likes)
@@ -331,12 +330,13 @@ def scrape_comments(driver, replies=False):
             pass
 
         comment_df = pd.DataFrame({
-            "c_username": [comment_username],
-            "c_timestamp": [comment_timestamp],
-            "c_text": [comment_text],
+            "c_from": [comment_from],
+            "c_created_time": [comment_created_time],
+            "c_message": [comment_message],
             "c_like_count": [comment_like_count],
+            "c_reply_count": [comment_reply_count],
             "c_id": [comment_id],
-            "c_reply_id": [comment_reply_id],
+            "c_parent": [comment_parent],
         })
 
         comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
