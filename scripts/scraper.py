@@ -17,6 +17,7 @@ def main(**kwargs):
     # read kwargs arguments
     comments = kwargs.get("comments")
     replies = kwargs.get("replies")
+    reactions = kwargs.get("reactions")
     output_folder = kwargs.get("custom_folder")
     
     post_dict = read_posts()
