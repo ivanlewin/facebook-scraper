@@ -169,6 +169,16 @@ def bs4_parse(html):
     like_count = post_json.get("edge_media_preview_like").get("count")
     if like_count: post_like_count = int(like_count)
     post_shortcode = post_json.get("shortcode")
+    # like_count = post_json.get("edge_media_preview_like").get("count")
+    # if like_count:
+    #     post_like_count = int(like_count)
+
+    try:
+        username = soup.select('div._4g34._5i2i._52we h3 a')[0]
+        post_author = username.string
+    except (IndexError, TypeError):
+        print("Error: post_author")
+
     try:
         owner = soup.select('#u_0_z')[0]
         owner = json.loads(owner['data-store'])
