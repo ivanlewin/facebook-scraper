@@ -169,16 +169,19 @@ def bs4_parse(html):
     like_count = post_json.get("edge_media_preview_like").get("count")
     if like_count: post_like_count = int(like_count)
     post_shortcode = post_json.get("shortcode")
+    try:
+        owner = soup.select('#u_0_z')[0]
+        owner = json.loads(owner['data-store'])
 
-    owner = post_json.get("owner")
-    if owner:
-        post_username = owner.get("username")
-        post_owner = owner.get("id")
+        if owner:
+            post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
+            post_owner = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
 
-    location = post_json.get("location")
-    if location:
-        post_location = location.get("name")
-        post_location_id = location.get("id")
+            timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
+            post_timestamp = datetime.fromtimestamp(int(timestamp))
+
+    except (IndexError, TypeError):
+        print("Error: post_id, post_owner, post_timestamp")
 
     media_type = post_json.get("__typename")
     if media_type == "GraphImage": post_media_type = "IMAGE"
