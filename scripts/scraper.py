@@ -318,10 +318,11 @@ def get_comment_info(comment):
         pass
 
     comment_df = pd.DataFrame({
-        "c_from": [comment_from],
+        "c_author_name": [comment_author_name],
+        "c_author_username": [comment_author_username],
         "c_created_time": [comment_created_time],
         "c_message": [comment_message],
-        "c_like_count": [comment_like_count],
+        "c_reactions_count": [comment_reactions_count],
         "c_reply_count": [comment_reply_count],
         "c_id": [comment_id],
         "c_parent": [comment_parent],
