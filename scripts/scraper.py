@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from datetime import datetime
 from pandas.errors import EmptyDataError
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, ElementClickInterceptedException
+from selenium.common.exceptions import NoSuchElementException
 from time import sleep
 
 
