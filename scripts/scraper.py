@@ -193,18 +193,8 @@ def parse_post(html):
             # a._5pcq > abbr[data-utime]
 
     except (IndexError, TypeError):
-        print("Error: post_id, post_owner, post_timestamp")
+        print("Error: post_id, post_author_id, post_created_time")
 
-    media_type = post_json.get("__typename")
-    if media_type == "GraphImage":
-        post_media_type = "IMAGE"
-    elif media_type == "GraphSidecar":
-        post_media_type = "CAROUSEL_ALBUM"
-    elif media_type == "GraphVideo":
-        post_media_type = "VIDEO"
-
-    post_views_count = post_json.get("video_view_count")
-    
     # Fill dataframe with values, which will be None if not found
     post_df["p_comments_count"] = [post_comments_count]
     post_df["p_caption"] = [post_caption]
