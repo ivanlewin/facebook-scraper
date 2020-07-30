@@ -343,7 +343,7 @@ def scrape_comments(html):
     soup = BeautifulSoup(html, "html.parser")
 
     try:
-        for comment in soup.select("._2a_i ._14v5"):
+        for comment in soup.select("._14v5"):
             comment_df = get_comment_info(comment)
             comments_df = pd.concat([comments_df, comment_df])
 
