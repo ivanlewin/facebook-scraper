@@ -152,8 +152,9 @@ def parse_post(html):
             json_string = script.string.replace('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive(', "")[:-5]
             post_info = json.loads(json_string)
 
-    comments_count = post_json.get("edge_media_to_parent_comment").get("count")
-    if comments_count : post_comments_count = int(comments_count)
+    # comments_count = post_json.get("edge_media_to_parent_comment").get("count")
+    # if comments_count:
+    #     post_comments_count = int(comments_count)
 
     try:
         post_caption = soup.select('._5rgt._5nk5')[0].text
