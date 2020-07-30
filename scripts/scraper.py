@@ -157,12 +157,12 @@ def parse_post(html):
     #     post_comments_count = int(comments_count)
 
     try:
-        post_caption = soup.select('._5rgt._5nk5')[0].text
+        post_caption = soup.select_one('._5rgt._5nk5').text
     except (IndexError, TypeError):  # No caption
         pass
 
     try:
-        shares = soup.select('div._43lx._55wr a')[0]
+        shares = soup.select_one('div._43lx._55wr a')
         shares = re.search(r'(\d+)', shares.string)[0]
         post_shares_count = int(shares)
     except (IndexError, TypeError):
@@ -173,13 +173,13 @@ def parse_post(html):
     #     post_reactions_count = int(like_count)
 
     try:
-        username = soup.select('div._4g34._5i2i._52we h3 a')[0]
+        username = soup.select_one('div._4g34._5i2i._52we h3 a')
         post_author = username.string
     except (IndexError, TypeError):
         print("Error: post_author")
 
     try:
-        owner = soup.select('#u_0_z')[0]
+        owner = soup.select_one('#u_0_z')
         owner = json.loads(owner['data-store'])
 
         if owner:
