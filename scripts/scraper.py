@@ -146,11 +146,11 @@ def parse_post(html):
 
     soup = BeautifulSoup(html, "html.parser")
 
-    # Search for a script that contains the post metadata
-    for script in soup.select('script[nonce]'):
-        if (script.string and script.string.startswith('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive({sr_revision:1002429484,bootloadable:{MPagesBanUserUtils')):
-            json_string = script.string.replace('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive(', "")[:-5]
-            post_info = json.loads(json_string)
+    # # Search for a script that contains the post metadata
+    # for script in soup.select('script[nonce]'):
+    #     if (script.string and script.string.startswith('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive({sr_revision:1002429484,bootloadable:{MPagesBanUserUtils')):
+    #         json_string = script.string.replace('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive(', "")[:-5]
+    #         post_info = json.loads(json_string)
 
     # comments_count = post_json.get("edge_media_to_parent_comment").get("count")
     # if comments_count:
