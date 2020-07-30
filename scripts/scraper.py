@@ -298,10 +298,14 @@ def get_comment_info(comment):
 
     comment_id = comment_reply_count = comment_created_time = comment_author_name = comment_author_username = comment_reactions_count = comment_message = comment_parent = None
     try:
-        comment_from = comment.find_element_by_css_selector("h3 a").text
-        comment_message = comment.find_element_by_css_selector("div[data-commentid]").text
+        author = comment.select_one("._2b05 > a")
+        comment_author_name = author.text
+        m = re.match(r'\/(.*)\?', author['href'])  # extraer el username del href
+        comment_author_username = m[1]
 
-        info = comment.find_element_by_css_selector(".aGBdT > div")
+        message = comment.select_one("div[data-commentid]")
+        comment_message = message.text
+        comment_id = message['data-commentid']
 
         permalink = info.find_element_by_css_selector("a")
         m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
