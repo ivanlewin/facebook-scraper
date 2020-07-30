@@ -42,7 +42,7 @@ def main(**kwargs):
                     print("Loading replies")
                     load_all_replies()
 
-                comments_df = scrape_comments(driver, replies=replies)
+                comments_df = scrape_comments(driver.page_source)
 
                 try:
                     post_df = pd.concat([post_df] * len(comments_df.index))  # Repeat the post_df rows to match the comments count
@@ -279,7 +279,7 @@ def load_all_comments(driver):
         sleep(2)
 
         # el boton no desaparece cuando ya no hay comentarios; sigue funcionando pero no hace nada
-        
+
         # scrollear hasta el boton
         view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
         driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
@@ -349,17 +349,13 @@ def get_comment_info(comment):
     return comment_df
 
 
-def scrape_comments(driver, replies=False):
+def scrape_comments(html):
 
     comments_df = pd.DataFrame()
-
-    load_all_comments()
-    if replies:
-        load_all_replies()
+    soup = BeautifulSoup(html, "html.parser")
 
     try:
         for comment in soup.select("._2a_i ._14v5"):
-            driver.execute_script("arguments[0].scrollIntoView();", comment)
             comment_df = get_comment_info(comment)
             comments_df = pd.concat([comments_df, comment_df])
 
