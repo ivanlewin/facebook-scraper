@@ -296,8 +296,7 @@ def load_all_replies(driver):
 
 def get_comment_info(comment):
 
-    comment_id = comment_reply_count = comment_created_time = comment_from = comment_like_count = comment_message = comment_parent = None
-
+    comment_id = comment_reply_count = comment_created_time = comment_author_name = comment_author_username = comment_reactions_count = comment_message = comment_parent = None
     try:
         comment_from = comment.find_element_by_css_selector("h3 a").text
         comment_message = comment.find_element_by_css_selector("div[data-commentid]").text
