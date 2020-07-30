@@ -33,6 +33,7 @@ def main(**kwargs):
             # url_dict = analyze_url(post)
 
             driver = get_mobile_post(driver, post)
+            post_df = parse_post(driver.page_source)
 
             if comments:
                 print("Loading comments")
@@ -54,7 +55,6 @@ def main(**kwargs):
             if reactions:
                 pass
 
-            post_df = parse_post(driver.page_source)
             save_dataframe(post_df, dest_path)
             print(f"Database saved: {dest_path}\n")
 
