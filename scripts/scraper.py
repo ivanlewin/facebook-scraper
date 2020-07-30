@@ -142,7 +142,7 @@ def parse_post(html):
 
     # Initialize dataframe instance, and set post metadata to None
     post_df = pd.DataFrame()
-    post_comments_count = post_shares_count = post_caption = post_id = post_is_comment_enabled = post_like_count = post_media_type = post_owner = post_shortcode = post_timestamp = post_username = post_views_count = post_location = post_location_id = None
+    post_comments_count = post_shares_count = post_caption = post_id = post_reactions_count = post_author_id = post_created_time = post_author = None
 
     soup = BeautifulSoup(html, "html.parser")
 
@@ -170,7 +170,7 @@ def parse_post(html):
 
     # like_count = post_json.get("edge_media_preview_like").get("count")
     # if like_count:
-    #     post_like_count = int(like_count)
+    #     post_reactions_count = int(like_count)
 
     try:
         username = soup.select('div._4g34._5i2i._52we h3 a')[0]
@@ -184,12 +184,12 @@ def parse_post(html):
 
         if owner:
             post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
-            post_owner = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
+            post_author_id = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
 
             timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
-            post_timestamp = datetime.fromtimestamp(int(timestamp))
+            post_created_time = datetime.fromtimestamp(int(timestamp))
 
-            # selector para post_timestamp con request del posteo version desktop
+            # selector para post_created_time con request del posteo version desktop
             # a._5pcq > abbr[data-utime]
 
     except (IndexError, TypeError):
@@ -208,18 +208,16 @@ def parse_post(html):
     # Fill dataframe with values, which will be None if not found
     post_df["p_comments_count"] = [post_comments_count]
     post_df["p_caption"] = [post_caption]
-    # post_df["p_id"] = [post_id]
     post_df["p_id"] = [post_id]
-    post_df["p_like_count"] = [post_like_count]
+    post_df["p_reactions_count"] = [post_reactions_count]
     post_df["p_shares_count"] = [post_shares_count]
     # post_df["p_media_url"] = [post_media_url]
-    post_df["p_owner"] = [post_owner]
-    # post_df["p_permalink"] = [post_permalink]
-    post_df["p_timestamp"] = [post_timestamp]
-    post_df["p_username"] = [post_username]
-    post_df["p_views_count"] = [post_views_count]
+    post_df["p_author_id"] = [post_author_id]
+    # post_df["p_permalink_url"] = [post_permalink_url]
+    post_df["p_created_time"] = [post_created_time]
+    post_df["p_author"] = [post_author]
 
-    post_df = post_df.astype({"p_ig_id": object, "p_owner": object, "p_location_id": object})
+    post_df = post_df.astype({"p_id": object, "p_author_id": object})
 
     return post_df
 
