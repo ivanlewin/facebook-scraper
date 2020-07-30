@@ -307,20 +307,12 @@ def get_comment_info(comment):
         comment_message = message.text
         comment_id = message['data-commentid']
 
-        permalink = info.find_element_by_css_selector("a")
-        m = re.match(r"(?:https:\/\/www\.instagram\.com\/p\/.+)\/c\/(\d+)(?:\/)(?:r\/(\d+)\/)?", permalink.get_attribute("href"))
-        comment_id = m[1]
-        comment_parent = m[2]
+        info = comment.select(".aGBdT > div")
+
+        comment_reactions_count = comment.select_one('span._14va').text
 
         comment_created_time = info.find_element_by_tag_name("time").get_attribute("datetime")
         comment_created_time = datetime.strptime(comment_created_time, r"%Y-%m-%dT%H:%M:%S.%fZ")
-
-        likes = info.find_element_by_css_selector("button.FH9sR").text
-        m = re.match(r"(\d+)", likes)
-        if m:
-            comment_like_count = int(m[0])
-        else:
-            comment_like_count = 0
 
     except NoSuchElementException:
         pass
