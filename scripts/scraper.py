@@ -307,12 +307,7 @@ def get_comment_info(comment):
         comment_message = message.text
         comment_id = message['data-commentid']
 
-        info = comment.select(".aGBdT > div")
-
         comment_reactions_count = comment.select_one('span._14va').text
-
-        comment_created_time = info.find_element_by_tag_name("time").get_attribute("datetime")
-        comment_created_time = datetime.strptime(comment_created_time, r"%Y-%m-%dT%H:%M:%S.%fZ")
 
     except NoSuchElementException:
         pass
