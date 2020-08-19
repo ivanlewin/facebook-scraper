@@ -23,21 +23,8 @@
 <!-- 109323440782253_145220453859218?fields=actions,admin_creator,application,backdated_time,call_to_action,expanded_height,event,created_time,coordinates,comments_mirroring_domain,child_attachments,can_reply_privately,instagram_eligibility,id,icon,height,full_picture,expanded_width,is_expired,is_hidden,is_inline_created,is_popular,is_published,is_spherical,is_instagram_eligible,message,from,message_tags,parent_id,picture,place,privacy,properties,scheduled_publish_time,shares,status_type,story,story_tags,subscribed,target,targeting,timeline_visibility,updated_time,via,width -->
 
 
-r_post_mobile = requests.get(post_mobile)
-r_post_desktop = requests.get(post_desktop)
-r_reactions_mobile = requests.get(reactions_mobile)  # No sirve
-
-with open("response_post_mobile.html", "w", encoding="utf-8") as f:
-    f.write(r_post_mobile.text)
-with open("response_post_desktop.html", "w", encoding="utf-8") as f:
-    f.write(r_post_desktop.text)
-with open("response_reactions_mobile.html", "w", encoding="utf-8") as f:
-    f.write(r_reactions_mobile.text)
-
 driver.get(post_mobile)
-driver.get(post_desktop)
-driver.get(reactions_mobile)
-with open("a.html", "w", encoding="utf-8") as f:
+with open("page_source_mobile_chrome_all_comments.html", "w+", encoding="utf-8") as f:
     f.write(driver.page_source)
 
 # posts
