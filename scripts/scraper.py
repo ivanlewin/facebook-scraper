@@ -289,18 +289,33 @@ def load_all_replies(driver):
             break
 
 
-def get_comment_info(comment):
+def scrape_comments(html):
 
-    comment_id = comment_reply_count = comment_created_time = comment_author_name = comment_author_username = comment_reactions_count = comment_message = comment_parent = None
-    try:
-        author = comment.select_one("._2b05 > a")
-        comment_author_name = author.text
-        m = re.match(r'\/(.*)\?', author['href'])  # extraer el username del href
-        comment_author_username = m[1]
+    comments_df = pd.DataFrame()
+    soup = BeautifulSoup(html, "html.parser")
 
-        message = comment.select_one("div[data-commentid]")
-        comment_message = message.text
-        comment_id = message['data-commentid']
+    for comment in soup.select("._333v._45kb > ._2a_i"):  # top-level comments o threads (comentarios con replies)
+
+        if "_2a_l" not in comment["class"]:  # los threads tienen esta clase -> este comentario no tiene replies
+            try:
+                comment_df = get_comment_info(comment, parent=None, reply_count=0)
+            except ValueError:  # df vacio
+                pass
+
+        else:  # hay replies
+            replies = comment.select("._2a_m ._2a_i")
+            comment_df = get_comment_info(comment, parent=None, reply_count=len(replies))
+            thread_id = comment["id"]  # uso el comment_id de este comentario como parent_id de las replies
+            for reply in replies:
+                try:
+                    reply_df = get_comment_info(reply, parent=thread_id, reply_count=0)
+                    comment_df = pd.concat([comment_df, reply_df])
+                except ValueError:  # df vacio
+                    pass
+
+        comments_df = pd.concat([comments_df, comment_df])
+
+    return comments_df
 
         comment_reactions_count = comment.select_one('span._14va').text
 
@@ -321,22 +336,6 @@ def get_comment_info(comment):
     comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
 
     return comment_df
-
-
-def scrape_comments(html):
-
-    comments_df = pd.DataFrame()
-    soup = BeautifulSoup(html, "html.parser")
-
-    try:
-        for comment in soup.select("._14v5"):
-            comment_df = get_comment_info(comment)
-            comments_df = pd.concat([comments_df, comment_df])
-
-    except ValueError:  # empty df
-        pass
-
-    return comments_df
 
 
 def save_dataframe(df, path):
