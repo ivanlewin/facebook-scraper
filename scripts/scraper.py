@@ -389,4 +389,5 @@ def get_file_path(prefix, output_folder, timestamp=datetime.now().strftime(r"%Y%
 
 if __name__ == "__main__":
     config = read_config()
-    # main(**config)
+    main(**config)
+
