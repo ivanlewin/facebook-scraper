@@ -317,23 +317,45 @@ def scrape_comments(html):
 
     return comments_df
 
-        comment_reactions_count = comment.select_one('span._14va').text
 
-    except NoSuchElementException:
-        pass
+def get_comment_info(comment, parent, reply_count):
+
+    # Inicializo las columnas en None
+    comment_id = comment_author = comment_author_name = comment_reactions_count = comment_message = None
+
+    comment_id = comment["id"]  # atributo id del div
+
+    author = comment.select_one("._2b05 > a")
+    m = re.match(r'(?:\/(profile\.php\?id=)?)(\d+|[^\?\&]*)', author['href'])  # matchea el id o el username, en ese orden
+    comment_author = m[2]
+    comment_author_name = author.text
+
+    message = comment.select_one("div[data-commentid]")
+    # cuando no hay mensaje (por ej, cuando el comentario es un sticker), hay un solo div
+    # que tiene la clase _2b05 y el atributo data-commentid. entonces el .text de ese elemento
+    # es el nombre de la persona, pero el mensaje real estaría vacío, por eso None.
+    if message.get("class") is not None:
+        if "_2b05" in message["class"]:
+            comment_message = None
+    else:
+        comment_message = message.text
+
+    reactions = comment.select_one('span._14va').text
+    # asigno las reactions a la columna, si tiene, o reemplazo el string vacío del span por un 0
+    comment_reactions_count = reactions if reactions != "" else 0
 
     comment_df = pd.DataFrame({
         "c_author_name": [comment_author_name],
-        "c_author_username": [comment_author_username],
-        "c_created_time": [comment_created_time],
+        "c_author": [comment_author],
         "c_message": [comment_message],
         "c_reactions_count": [comment_reactions_count],
-        "c_reply_count": [comment_reply_count],
+        "c_reply_count": [reply_count],
         "c_id": [comment_id],
-        "c_parent": [comment_parent],
+        "c_parent": [parent]  # se pasa como parametro de la funcion
     })
 
-    comment_df = comment_df.astype({"c_id": object, "c_reply_id": object})
+    # cambio el datatype de las columnas de id a strings para que no los castee a numbers
+    comment_df = comment_df.astype({"c_id": object, "c_parent": object, "c_author": object})
 
     return comment_df
 
