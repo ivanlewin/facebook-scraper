@@ -44,8 +44,9 @@ def main(**kwargs):
                 comments_df = scrape_comments(driver.page_source)
 
                 try:
-                    post_df = pd.concat([post_df] * len(comments_df.index))  # Repeat the post_df rows to match the comments count
-                    post_df = pd.concat([post_df, comments_df], axis=1)  # Join the two dataframes together, side to side horizontally
+                    # unir las df, añadiendo la informacion del posteo a cada comment
+                    post_df = pd.concat([post_df] * len(comments_df.index))
+                    post_df = pd.concat([post_df, comments_df], axis=1)
 
                 except ValueError:  # Empty df
                     pass
@@ -198,6 +199,7 @@ def parse_post(html):
         "p_author": [post_author],
     })
 
+    # cambio el datatype de las columnas de id a strings para que no los castee a numbers
     post_df = post_df.astype({"p_id": object, "p_author_id": object})
 
     return post_df
@@ -247,17 +249,23 @@ def load_driver(driver="Firefox", existing_profile=False, profile=None):
 
 
 def load_all_comments(driver):
-    """Clickea el boton de "View more comments" hasta que no encuentre nuevos comments."""
+    """
+    Clickea el boton de "View more comments" hasta que no encuentre nuevos comments.
+
+    El boton no desaparece cuando ya no hay comentarios; sigue funcionando pero no hace nada.
+    Por eso se chequea el último comentario y se lo compara cada vez que se aprieta el botón
+    """
+
     last_comment = None
+
     while True:
+
         # boton al final de todo
         view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
         # hacer scroll hasta que este enfocado y clickearlo
         driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
         view_more_comments.click()
         sleep(2)
-
-        # el boton no desaparece cuando ya no hay comentarios; sigue funcionando pero no hace nada
 
         # scrollear hasta el boton
         view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
@@ -266,7 +274,6 @@ def load_all_comments(driver):
         # chequear el comentario inmediatamente anterior al boton para ver si cambio
         preceding_comment = view_more_comments.find_element_by_xpath("./preceding-sibling::*[1][@class='_2a_i']")
 
-        # chequear que el ultimo comment no sea igual al ultimo guardado
         if preceding_comment == last_comment:
             break
         else:
@@ -275,6 +282,7 @@ def load_all_comments(driver):
 
 def load_all_replies(driver):
     """Clickea todos los botones de 'x reply(ies)' hasta que no encuentre ninguno."""
+
     while True:
         try:
             view_replies_buttons = driver.find_element_by_css_selector("div[id*='comment_replies_more_']")
@@ -348,7 +356,7 @@ def save_dataframe(df, path):
 
 def get_file_path(prefix, output_folder, timestamp=datetime.now().strftime(r"%Y%m%d")):
 
-    # use custom output_folder if there's one, else default folder
+    # usar la output_folder si no es None, o la carpeta "/csv" por defecto
     if output_folder:
         folder = os.path.abspath(output_folder)
     else:
