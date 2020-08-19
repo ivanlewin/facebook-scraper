@@ -151,10 +151,6 @@ def parse_post(html):
     except (IndexError, TypeError):
         print("Error: post_shares_count")
 
-    # like_count = post_json.get("edge_media_preview_like").get("count")
-    # if like_count:
-    #     post_reactions_count = int(like_count)
-
     try:
         username = soup.select_one('div._4g34._5i2i._52we h3 a')
         post_author = username.string
@@ -171,9 +167,6 @@ def parse_post(html):
 
             timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
             post_created_time = datetime.fromtimestamp(int(timestamp))
-
-            # selector para post_created_time con request del posteo version desktop
-            # a._5pcq > abbr[data-utime]
 
     except (IndexError, TypeError):
         print("Error: post_id | post_author_id | post_created_time")
