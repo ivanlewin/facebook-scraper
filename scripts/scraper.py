@@ -139,16 +139,6 @@ def parse_post(html):
 
     soup = BeautifulSoup(html, "html.parser")
 
-    # # Search for a script that contains the post metadata
-    # for script in soup.select('script[nonce]'):
-    #     if (script.string and script.string.startswith('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive({sr_revision:1002429484,bootloadable:{MPagesBanUserUtils')):
-    #         json_string = script.string.replace('requireLazy(["__bigPipe"],(function(bigPipe){bigPipe.onPageletArrive(', "")[:-5]
-    #         post_info = json.loads(json_string)
-
-    # comments_count = post_json.get("edge_media_to_parent_comment").get("count")
-    # if comments_count:
-    #     post_comments_count = int(comments_count)
-
     try:
         post_caption = soup.select_one('._5rgt._5nk5').text
     except (IndexError, TypeError):  # No caption
@@ -186,6 +176,19 @@ def parse_post(html):
             # a._5pcq > abbr[data-utime]
 
     except (IndexError, TypeError):
+        print("Error: post_id | post_author_id | post_created_time")
+
+    # extraigo un json de las metricas del posteo desde el html
+    unparsed_json = html[html.index(f"{{ft_ent_identifier:{post_id}"):html.index("reactorids")-1]  # json 'minificado', sin quotes.
+    parsed_json = re.sub(r'(\w+):', r'"\1":', unparsed_json) + "}"  # agrego quotes a las keys del diccionario, y agrego un '}' al final
+    post_metricas = json.loads(parsed_json)  # parseo el string como un diccionario
+
+    try:
+        post_comments_count = post_metricas["comment_count"]
+        post_reactions_count = post_metricas["reactioncount"]
+    except KeyError:
+        print("Error: post_comments_count | post_reactions_count")
+
     post_df = pd.DataFrame({
         "p_comments_count": [post_comments_count],
         "p_caption": [post_caption],
