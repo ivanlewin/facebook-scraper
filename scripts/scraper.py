@@ -39,7 +39,7 @@ def main(**kwargs):
 
                 if replies:
                     print("Loading replies")
-                    load_all_replies()
+                    load_all_replies(driver)
 
                 comments_df = scrape_comments(driver.page_source)
 
