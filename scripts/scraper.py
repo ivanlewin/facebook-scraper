@@ -133,8 +133,7 @@ def get_mobile_post(driver, url):
 
 def parse_post(html):
 
-    # Initialize dataframe instance, and set post metadata to None
-    post_df = pd.DataFrame()
+    # Inicializo las columnas en None
     post_comments_count = post_shares_count = post_caption = post_id = post_reactions_count = post_author_id = post_created_time = post_author = None
 
     soup = BeautifulSoup(html, "html.parser")
@@ -186,19 +185,18 @@ def parse_post(html):
             # a._5pcq > abbr[data-utime]
 
     except (IndexError, TypeError):
-        print("Error: post_id, post_author_id, post_created_time")
-
-    # Fill dataframe with values, which will be None if not found
-    post_df["p_comments_count"] = [post_comments_count]
-    post_df["p_caption"] = [post_caption]
-    post_df["p_id"] = [post_id]
-    post_df["p_reactions_count"] = [post_reactions_count]
-    post_df["p_shares_count"] = [post_shares_count]
-    # post_df["p_media_url"] = [post_media_url]
-    post_df["p_author_id"] = [post_author_id]
-    # post_df["p_permalink_url"] = [post_permalink_url]
-    post_df["p_created_time"] = [post_created_time]
-    post_df["p_author"] = [post_author]
+    post_df = pd.DataFrame({
+        "p_comments_count": [post_comments_count],
+        "p_caption": [post_caption],
+        "p_id": [post_id],
+        "p_reactions_count": [post_reactions_count],
+        "p_shares_count": [post_shares_count],
+        # "p_media_url": [post_media_url],
+        "p_author_id": [post_author_id],
+        # # "p_permalink_url": [post_permalink_url],
+        "p_created_time": [post_created_time],
+        "p_author": [post_author],
+    })
 
     post_df = post_df.astype({"p_id": object, "p_author_id": object})
 
