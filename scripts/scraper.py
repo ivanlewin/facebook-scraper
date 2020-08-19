@@ -141,8 +141,8 @@ def parse_post(html):
 
     try:
         post_caption = soup.select_one('._5rgt._5nk5').text
-    except (IndexError, TypeError):  # No caption
-        pass
+    except AttributeError:  # No caption
+        print("Error: post_caption")
 
     try:
         shares = soup.select_one('div._43lx._55wr a')
