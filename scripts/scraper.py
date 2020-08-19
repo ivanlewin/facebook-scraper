@@ -13,10 +13,8 @@ from time import sleep
 
 def main(**kwargs):
 
-    # read kwargs arguments
     comments = kwargs.get("comments")
     replies = kwargs.get("replies")
-    reactions = kwargs.get("reactions")
     output_folder = kwargs.get("custom_folder")
 
     post_dict = read_posts()
@@ -52,9 +50,6 @@ def main(**kwargs):
                 except ValueError:  # Empty df
                     pass
 
-            if reactions:
-                pass
-
             save_dataframe(post_df, dest_path)
             print(f"Database saved: {dest_path}\n")
 
@@ -68,14 +63,12 @@ def read_config():
 
     comments = config.getboolean("comments", "scrape_comments")
     replies = config.getboolean("comments", "scrape_replies")
-    reactions = config.getboolean("comments", "scrape_reactions")
 
     custom_folder = config.get("output", "output_folder")
 
     settings = {
         "comments": comments,
         "replies": replies,
-        "reactions": reactions,
         "custom_folder":  custom_folder if custom_folder else None,
     }
 

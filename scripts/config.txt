@@ -1,11 +1,8 @@
 [comments]
-scrape_comments = False
+scrape_comments = True
 
 # (requiere scrape_comments = True)
-scrape_replies = False
-
-# (requiere scrape_comments = True)
-scrape_reactions = False
+scrape_replies = True
 
 [output]
 # path relativa al directorio facebook-scraper, valor por defecto = './csv'
