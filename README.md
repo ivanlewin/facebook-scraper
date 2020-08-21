@@ -46,3 +46,6 @@ prueba = {
 
     "watch": "https://m.facebook.com/watch/?v=276697480251803"
 }
+
+options(scipen = 999)
+comments <- read.csv("menta/repos/facebook-scraper/csv/kicillof_20200819.csv", encoding="UTF-8")
