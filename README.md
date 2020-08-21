@@ -29,22 +29,18 @@ with open("page_source_mobile_chrome_all_comments.html", "w+", encoding="utf-8")
 
 # posts
 prueba = {
-    # 'evaluan' a lo mismo
+    <!-- urls de publicaciones scrapeables -->
     "posts_pname": "https://m.facebook.com/kicillofok/posts/1677972215701943",
     "posts_pid": "https://m.facebook.com/116053261893854/posts/1677972215701943",
     "story_php": "https://m.facebook.com/story.php?story_fbid=1677972215701943&id=116053261893854",
 
-    # 'evaluan' a lo mismo
-    "photos_phid": "https://m.facebook.com/kicillofok/photos/pcb.1677972215701943/1677971219035376/",
+    <!-- urls de publicaciones con link al posteo scrapeable -->
+    "photo_pid_phid": "https://m.facebook.com/kicillofok/photos/pcb.1677972215701943/1677971219035376/",
+    "watch": "https://m.facebook.com/watch/?v=755135301944928"
+
+    <!-- fotos sin link al posteo -->
     "photo_php": "https://m.facebook.com/photo.php?fbid=1677971219035376&set=a.211840645648448",
-
-    # 'evaluan' a lo mismo
-    "photo_php_1": "https://m.facebook.com/photo.php?fbid=10158620472653554&set=a.10150354952758554",
-    "photos_a_1": "https://m.facebook.com/GrandMartez/photos/a.10150354952758554/10158620472653554",
-
-    "story_php_livevideo": "https://m.facebook.com/story.php?story_fbid=951485155323874&id=153080620724",
-
-    "watch": "https://m.facebook.com/watch/?v=276697480251803"
+    "photos_albumid_phid": "https://m.facebook.com/kicillofok/photos/a.211840645648448/1677971219035376",
 }
 
 options(scipen = 999)
