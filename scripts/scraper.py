@@ -184,7 +184,7 @@ def parse_post(html):
             timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
             post_created_time = datetime.fromtimestamp(int(timestamp))
 
-    except (IndexError, TypeError):
+    except (IndexError, TypeError, KeyError):
         print("Error: post_id | post_author_id | post_created_time")
 
     # extraigo un json de las metricas del posteo desde el html
