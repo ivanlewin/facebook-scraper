@@ -140,6 +140,18 @@ def get_mobile_post(driver):
     if "www.facebook.com" in driver.current_url:
         driver.get(driver.current_url.replace("www.facebook.com", "m.facebook.com"))
 
+    try:
+        parent_post = driver.find_element_by_css_selector('div._2vja')
+        for link in parent_post.find_elements_by_css_selector("a"):
+            url = link.get_attribute("href")
+            if any([re.search(target_url, url) for target_url in target_urls]):
+                #  hay que hacer driver.get() en lugar de link.click() para que cargue toda
+                # la página desde 0 y no quede información del link anterior (que no se puede scrapear)
+                driver.get(url)
+                return
+
+    except NoSuchElementException:
+        pass
 
     try:
         story_link = driver.find_element_by_css_selector('div._2vja')
