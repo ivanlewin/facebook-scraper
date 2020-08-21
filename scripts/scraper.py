@@ -331,9 +331,10 @@ def get_comment_info(comment, parent, reply_count):
     comment_author_name = author.text
 
     message = comment.select_one("div[data-commentid]")
-    # cuando no hay mensaje (por ej, cuando el comentario es un sticker), hay un solo div
-    # que tiene la clase _2b05 y el atributo data-commentid. entonces el .text de ese elemento
-    # es el nombre de la persona, pero el mensaje real estaría vacío, por eso None.
+    # cuando no hay mensaje (por ej, cuando el comentario es un sticker), hay un solo div con
+    # clase _2b05 y el atributo data-commentid (en vez de dos divs separados). el textContent de ese elemento
+    # es comment_author_name, pero deberia ser None (o un string vacio).
+
     if message.get("class") is not None:
         if "_2b05" in message["class"]:
             comment_message = None
