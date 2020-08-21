@@ -164,13 +164,13 @@ def parse_post(html):
         shares = soup.select_one('div._43lx._55wr a')
         shares = re.search(r'(\d+)', shares.string)[0]
         post_shares_count = int(shares)
-    except (IndexError, TypeError):
+    except (IndexError, TypeError, AttributeError):
         print("Error: post_shares_count")
 
     try:
         username = soup.select_one('div._4g34._5i2i._52we h3 a')
         post_author = username.string
-    except (IndexError, TypeError):
+    except (IndexError, TypeError, AttributeError):
         print("Error: post_author")
 
     try:
