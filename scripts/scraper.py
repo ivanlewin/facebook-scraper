@@ -30,7 +30,8 @@ def main(**kwargs):
 
             # url_dict = analyze_url(post)
 
-            driver = get_mobile_post(driver, post)
+            driver.get(post)
+            get_mobile_post(driver)
             post_df = parse_post(driver.page_source)
 
             if comments:
@@ -88,47 +89,62 @@ def read_posts():
     return posts
 
 
-# def analyze_url(url):
-#     """Analizar la url y ver qué información \
-#     se puede extraer acerca del posteo"""
+def analyze_url(url):
+    """Analizar la url y ver qué información \
+    se puede extraer acerca del posteo"""
 
-#     profile_id = profile_name = post_id = photo_id = video_id = album_id = None
+    profile_id = profile_name = post_id = photo_id = video_id = album_id = None
 
-#     regex_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)")
-#     regex_story_php = re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))")
-#     regex_photo_php = re.compile(r"facebook\.com\/photo\.php\?(?:(?:fbid=(?P<post_id>\d+)))&(?:(?:id=(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))))&(?:(?:set=a\.(?P<album_id>\d+)))")
-#     regex_videos = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/videos\/(?P<video_id>\d+)")
-#     regex_videos_watch = re.compile(r"facebook\.com\/watch\/(?:live\/)?\?((?:v=(?P<video_id>\d+)))")
-#     regex_photo_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_namme>[a-zA-Z0-9.]+))\/(?:photos)\/(?:(?:pcb\.(?P<post_id>\d+)))\/(?:(?P<photo_id>\d+))")
+    regex_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)")
+    regex_story_php = re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))")
+    regex_photo_php = re.compile(r"facebook\.com\/photo\.php\?(?:(?:fbid=(?P<post_id>\d+)))&(?:(?:id=(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))))&(?:(?:set=a\.(?P<album_id>\d+)))")
+    regex_videos = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/videos\/(?P<video_id>\d+)")
+    regex_videos_watch = re.compile(r"facebook\.com\/watch\/(?:live\/)?\?((?:v=(?P<video_id>\d+)))")
+    regex_photo_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_namme>[a-zA-Z0-9.]+))\/(?:photos)\/(?:(?:pcb\.(?P<post_id>\d+)))\/(?:(?P<photo_id>\d+))")
 
-#     # patterns = [regex_posts, regex_story_php, regex_photo_php, regex_videos,
-#     #     regex_videos_watch, regex_photo_posts]
+    # patterns = [regex_posts, regex_story_php, regex_photo_php, regex_videos,
+    #     regex_videos_watch, regex_photo_posts]
 
-#     # for pattern in patterns:
-#         # if re.match()
+    # for pattern in patterns:
+        # if re.match()
 
-#     m = re.search(regex_posts, url)
-#     if m.groupdict() is not None:
-#         post_id = m_dict.get("post_id")
-#         profile_name = m_dict.get("profile_name")
-#         profile_id = m_dict.get("profile_id")
-
-
-#     if (m := re.match(regex_posts, url)):
-#         m_dict = m.groupdict()
-
-#         post_id = m_dict.get("post_id")
-#         profile_name = m_dict.get("profile_name")
-#         profile_id = m_dict.get("profile_id")
-
-#     elif (m := re.match(regex_story_php, url)):
-#         pass
-
-#     reactions_url = f'https://m.facebook.com/ufi/reaction/profile/browser/?ft_ent_identifier={post_id}'
+    m = re.search(regex_posts, url)
+    if m.groupdict() is not None:
+        post_id = m_dict.get("post_id")
+        profile_name = m_dict.get("profile_name")
+        profile_id = m_dict.get("profile_id")
 
 
-def get_mobile_post(driver, url):
-    driver.get(url.replace("www.facebook.com", "m.facebook.com"))
+    if (m := re.match(regex_posts, url)):
+        m_dict = m.groupdict()
+
+        post_id = m_dict.get("post_id")
+        profile_name = m_dict.get("profile_name")
+        profile_id = m_dict.get("profile_id")
+
+    elif (m := re.match(regex_story_php, url)):
+        pass
+
+
+def get_mobile_post(driver):
+    
+    if "www.facebook.com" in driver.current_url:
+        driver.get(driver.current_url.replace("www.facebook.com", "m.facebook.com"))
+
+    regex_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)")
+    regex_story_php = re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))")
+    regex_photo_php = re.compile(r"facebook\.com\/photo\.php\?(?:(?:fbid=(?P<post_id>\d+)))&(?:(?:id=(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))))&(?:(?:set=a\.(?P<album_id>\d+)))")
+
+    if (re.match(regex_posts, driver.current_url) or re.match(regex_story_php, driver.current_url) or re.match(regex_photo_php, driver.current_url)):
+        return driver
+
+    try:
+        story_link = driver.find_element_by_css_selector('div._2vja')
+        story_link.click()
+
+    except:
+        pass
+    
     return driver
 
 
