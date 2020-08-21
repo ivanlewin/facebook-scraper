@@ -32,6 +32,7 @@ def main(**kwargs):
 
             driver.get(post)
             get_mobile_post(driver)
+            sleep(1)
             post_df = parse_post(driver.page_source)
 
             if comments:
