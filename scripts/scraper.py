@@ -272,24 +272,28 @@ def load_all_comments(driver):
 
     while True:
 
-        # boton al final de todo
-        view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
-        # hacer scroll hasta que este enfocado y clickearlo
-        driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
-        view_more_comments.click()
-        sleep(2)
+        try:
+            # boton al final de todo
+            view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
+            # hacer scroll hasta que este enfocado y clickearlo
+            driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
+            view_more_comments.click()
+            sleep(2)
 
-        # scrollear hasta el boton
-        view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
-        driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
+            # scrollear hasta el boton
+            view_more_comments = driver.find_element_by_css_selector("div[id*='see_next_']")
+            driver.execute_script("arguments[0].scrollIntoView();", view_more_comments)
 
-        # chequear el comentario inmediatamente anterior al boton para ver si cambio
-        preceding_comment = view_more_comments.find_element_by_xpath("./preceding-sibling::*[1][@class='_2a_i']")
+            # chequear el comentario inmediatamente anterior al boton para ver si cambio
+            preceding_comment = view_more_comments.find_element_by_xpath("./preceding-sibling::*[1][@class='_2a_i']")
 
-        if preceding_comment == last_comment:
+            if preceding_comment == last_comment:
+                break
+            else:
+                last_comment = preceding_comment
+            
+        except NoSuchElementException:  # no hay botón de ver más (muy pocos comentarios)
             break
-        else:
-            last_comment = preceding_comment
 
 
 def load_all_replies(driver):
