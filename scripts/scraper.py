@@ -127,7 +127,9 @@ def analyze_url(url):
 
 
 def get_mobile_post(driver):
-    
+    """scrape_post() y scrape_comments() solo pueden analizar las urls de target_urls.
+    Los links de fotos, videos, vivos y otros no sirven."""
+
     # urls de posteos scrapeables
     target_urls = [re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)"),
                    re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))"),
