@@ -128,15 +128,18 @@ def analyze_url(url):
 
 def get_mobile_post(driver):
     
+    # urls de posteos scrapeables
+    target_urls = [re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)"),
+                   re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))"),
+                   re.compile(r"facebook\.com\/photo\.php\?(?:(?:fbid=(?P<post_id>\d+)))&(?:(?:id=(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))))&(?:(?:set=a\.(?P<album_id>\d+)))")]
+
+    # si la url matchea con algún patron
+    if any([re.search(pattern, driver.current_url) for pattern in target_urls]):
+        return
+
     if "www.facebook.com" in driver.current_url:
         driver.get(driver.current_url.replace("www.facebook.com", "m.facebook.com"))
 
-    regex_posts = re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)")
-    regex_story_php = re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))")
-    regex_photo_php = re.compile(r"facebook\.com\/photo\.php\?(?:(?:fbid=(?P<post_id>\d+)))&(?:(?:id=(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))))&(?:(?:set=a\.(?P<album_id>\d+)))")
-
-    if (re.match(regex_posts, driver.current_url) or re.match(regex_story_php, driver.current_url) or re.match(regex_photo_php, driver.current_url)):
-        return driver
 
     try:
         story_link = driver.find_element_by_css_selector('div._2vja')
