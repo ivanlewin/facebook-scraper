@@ -187,15 +187,27 @@ def parse_post(html):
     except (IndexError, TypeError, KeyError):
         print("Error: post_id | post_author_id | post_created_time")
 
-    # extraigo un json de las metricas del posteo desde el html
-    unparsed_json = html[html.index(f"{{ft_ent_identifier:{post_id}"):html.index("reactorids")-1]  # json 'minificado', sin quotes.
-    parsed_json = re.sub(r'(\w+):', r'"\1":', unparsed_json) + "}"  # agrego quotes a las keys del diccionario, y agrego un '}' al final
-    post_metricas = json.loads(parsed_json)  # parseo el string como un diccionario
+    # busco un json con metricas en el page_source de la pagina
+    unparsed_json = None
+    json_inicio = f"{{ft_ent_identifier:{post_id}"
+    json_final = ",reactorids"
 
-    try:
+    if json_inicio in html:
+        unparsed_json = html[html.index(json_inicio):html.index(json_final)]  # substring del json 'minificado'
+
+    else:
+        # el post_id puede que este entre comillas
+        json_inicio = f"{{ft_ent_identifier:\"{post_id}\""
+        if json_inicio in html:
+            unparsed_json = html[html.index(json_inicio):html.index(json_final)]  # substring del json 'minificado'
+
+    if unparsed_json is not None:
+        parsed_json = re.sub(r'(\w+):', r'"\1":', unparsed_json) # agrego quotes a las keys del json, y agrego un '}' al final
+        post_metricas = json.loads(parsed_json)  # parseo el string como un diccionario
+
         post_comments_count = post_metricas["comment_count"]
         post_reactions_count = post_metricas["reactioncount"]
-    except KeyError:
+
         print("Error: post_comments_count | post_reactions_count")
 
     post_df = pd.DataFrame({
