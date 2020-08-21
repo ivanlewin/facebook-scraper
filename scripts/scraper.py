@@ -189,7 +189,7 @@ def parse_post(html):
         print("Error: post_author")
 
     try:
-        owner = soup.select_one('#u_0_z')
+        owner = soup.select_one('div._5rgr')
         owner = json.loads(owner['data-store'])
 
         if owner:
