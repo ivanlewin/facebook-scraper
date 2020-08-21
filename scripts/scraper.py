@@ -154,13 +154,13 @@ def get_mobile_post(driver):
         pass
 
     try:
-        story_link = driver.find_element_by_css_selector('div._2vja')
-        story_link.click()
+        parent_post = driver.find_element_by_css_selector("div#mobile_injected_video_feed_pagelet ._52jc > a")
+        driver.get(parent_post.get_attribute("href"))
 
-    except:
+    except NoSuchElementException:
         pass
-    
-    return driver
+
+    return get_mobile_post(driver)
 
 
 def parse_post(html):
