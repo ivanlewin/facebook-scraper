@@ -406,8 +406,8 @@ def save_dataframe(df, path):
 
 def get_file_path(prefix, output_folder, timestamp=datetime.now().strftime(r"%Y%m%d")):
 
-    # usar la output_folder si no es None, o la carpeta "/csv" por defecto
-    if output_folder:
+    # usar la output_folder si la hay, o la carpeta "/csv" por defecto
+    if output_folder is not None:
         folder = os.path.abspath(output_folder)
     else:
         folder = os.path.abspath("./csv")
@@ -424,3 +424,11 @@ if __name__ == "__main__":
     config = read_config()
     main(**config)
 
+# with open("page_source_mobile_chrome_all_comments.html", "r", encoding='utf-8') as f:
+#     html = f.read()
+
+# post_df = parse_post(html)
+# comments_df = scrape_comments(html)
+# post_df = pd.concat([post_df] * len(comments_df.index))
+# post_df = pd.concat([post_df, comments_df], axis=1)
+# save_dataframe(post_df, dest_path)
