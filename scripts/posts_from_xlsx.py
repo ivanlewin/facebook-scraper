@@ -1,7 +1,7 @@
 import pandas as pd
 import openpyxl
 
-archivo = "todos.xlsx"
+archivo = ""
 skip_row = 10
 columna = 12
 
@@ -24,10 +24,7 @@ posteos = posteos.drop("Network", axis=1)
 posteos = posteos[["Page", "Link"]]
 
 # Reemplazar nombres de las páginas por sus usuarios de ig
-posteos["Page"] = ["santander" if "Santander" in p else p for p in posteos["Page"]]
-posteos["Page"] = ["bancociudad" if "Ciudad" in p else p for p in posteos["Page"]]
-posteos["Page"] = ["bancoprovincia" if "Provincia" in p else p for p in posteos["Page"]]
-
+posteos["Page"] = ["" if "" in p else p for p in posteos["Page"]]
 
 # Genera los archivos txt con los posteos de cada usuario
 for p in posteos["Page"]:
