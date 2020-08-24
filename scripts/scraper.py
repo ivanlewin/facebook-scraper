@@ -193,7 +193,7 @@ def parse_post(html):
         raw_json = m[1]
 
         if raw_json is not None:
-            clean_json = re.sub(r'(\w+):', r'"\1":', raw_json) + "}" # agrego quotes a las keys y agrego un '}' al final
+            clean_json = re.sub(r'(\w+):', r'"\1":', raw_json) + "}"  # agrego quotes a las keys y agrego un '}' al final
             post_metricas = json.loads(clean_json)  # parseo el string como un diccionario
 
             post_comments_count = post_metricas["comment_count"]
@@ -295,7 +295,7 @@ def load_all_comments(driver):
                 break
             else:
                 last_comment = preceding_comment
-            
+
         except NoSuchElementException:  # no hay botón de ver más (muy pocos comentarios)
             break
 
