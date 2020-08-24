@@ -363,7 +363,7 @@ def get_comment_info(comment, parent, reply_count):
 
     if message.get("class") is not None:
         if "_2b05" in message["class"]:
-            comment_message = None
+            comment_message = ""
     else:
         comment_message = message.text
 
