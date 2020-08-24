@@ -34,7 +34,7 @@ def main(**kwargs):
             driver.get(post)
             get_mobile_post(driver)
             sleep(2)
-            post_df = parse_post(driver.page_source)
+            post_df = scrape_post(driver.page_source)
 
             if comments:
                 print("Cargando comentarios")
@@ -133,7 +133,7 @@ def get_mobile_post(driver):
     return get_mobile_post(driver)
 
 
-def parse_post(html):
+def scrape_post(html):
 
     # Inicializo las columnas en None
     post_comments_count = post_shares_count = post_caption = post_id = post_reactions_count = post_author_id = post_created_time = post_author = None
@@ -428,7 +428,7 @@ if __name__ == "__main__":
 # with open("page_source_mobile_chrome_all_comments.html", "r", encoding='utf-8') as f:
 #     html = f.read()
 
-# post_df = parse_post(html)
+# post_df = scrape_post(html)
 # comments_df = scrape_comments(html)
 # post_df = pd.concat([post_df] * len(comments_df.index))
 # post_df = pd.concat([post_df, comments_df], axis=1)
