@@ -141,7 +141,10 @@ def parse_post(html):
     try:
         post_caption = soup.select_one('._5rgt._5nk5').text
     except AttributeError:  # No caption
-        print("Error: post_caption")
+        try:
+            post_caption = soup.select_one('.msg > div').text  # en algunos posteos aparece así
+        except AttributeError:
+            print("Error: post_caption")
 
     try:
         shares = soup.select_one('div._43lx._55wr a')
@@ -153,22 +156,35 @@ def parse_post(html):
     try:
         username = soup.select_one('div._4g34._5i2i._52we h3 a')
         post_author = username.string
-    except (IndexError, TypeError, AttributeError):
-        print("Error: post_author")
+    except AttributeError:
+        try:
+            username = soup.select_one('.msg > a')  # en algunos posteos aparece así
+            post_author = username.string
+        except AttributeError:
+            print("Error: post_author")
 
     try:
         owner = soup.select_one('div._5rgr')
         owner = json.loads(owner['data-store'])
 
-        if owner:
-            post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
-            post_author_id = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
+        post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
+        post_author_id = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
+        timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
+        post_created_time = datetime.fromtimestamp(int(timestamp))
 
-            timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
-            post_created_time = datetime.fromtimestamp(int(timestamp))
+    except (IndexError, TypeError, KeyError):  # algunos posteos tienen otra estructura
+        try:
+            owner = soup.select_one('div._57-o')
+            owner = json.loads(owner["data-store"])
 
-    except (IndexError, TypeError, KeyError):
-        print("Error: post_id | post_author_id | post_created_time")
+            post_id = owner["object_id"]
+            post_author_id = owner["owner_id"]
+            timestamp = soup.select_one('div._2vja > abbr[data-sigil="timestamp"]')
+            timestamp = json.loads(timestamp["data-store"])
+            post_created_time = datetime.fromtimestamp(int(timestamp["time"]))
+
+        except (IndexError, TypeError, KeyError):
+            print("Error: post_id | post_author_id | post_created_time")
 
     # busco un json con metricas en el page_source de la pagina
     try:
