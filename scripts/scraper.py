@@ -123,6 +123,7 @@ def get_mobile_post(driver):
     try:
         parent_post = driver.find_element_by_css_selector("div#mobile_injected_video_feed_pagelet ._52jc > a")
         driver.get(parent_post.get_attribute("href"))
+        return
 
     except NoSuchElementException:
         pass
