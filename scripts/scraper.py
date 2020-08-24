@@ -151,7 +151,7 @@ def parse_post(html):
     try:
         shares = soup.select_one('div._43lx._55wr a')
         shares = re.search(r'(\d+)', shares.string)[0]
-        post_shares_count = int(shares)
+        post_shares_count = int(shares) if shares else 0  # poner el numero de shares, o 0 (para que no quede NA)
     except (IndexError, TypeError, AttributeError):
         print("Error: post_shares_count")
 
