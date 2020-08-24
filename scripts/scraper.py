@@ -152,10 +152,14 @@ def parse_post(html):
             post_caption = ""
 
     try:
+        # poner el numero de shares, o 0 (para que no quede NA)
         shares = soup.select_one('div._43lx._55wr a')
-        shares = re.search(r'(\d+)', shares.string)[0]
-        post_shares_count = int(shares) if shares else 0  # poner el numero de shares, o 0 (para que no quede NA)
-    except (IndexError, TypeError, AttributeError):
+        if shares is not None:
+            shares = re.search(r'(\d+)', shares.string)[0]
+            post_shares_count = int(shares)
+        else:
+            post_shares_count = 0
+    except:
         print("Error: post_shares_count")
 
     try:
