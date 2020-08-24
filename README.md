@@ -43,5 +43,8 @@ prueba = {
     "photos_albumid_phid": "https://m.facebook.com/kicillofok/photos/a.211840645648448/1677971219035376",
 }
 
+library(dplyr)
 options(scipen = 999)
-comments <- read.csv("menta/repos/facebook-scraper/csv/kicillof_20200819.csv", encoding="UTF-8")
+carpeta <- "facebook-scraper/csv/"
+archivos <- dir(carpeta, full.names = T)
+comments <- do.call(rbind,lapply(archivos, read_csv)) %>% view()
