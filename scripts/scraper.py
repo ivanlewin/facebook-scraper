@@ -94,6 +94,10 @@ def get_mobile_post(driver):
     """scrape_post() y scrape_comments() solo pueden analizar las urls de target_urls.
     Los links de fotos, videos, vivos y otros no sirven."""
 
+    if "www.facebook.com" in driver.current_url:
+        driver.get(driver.current_url.replace("www.facebook.com", "m.facebook.com"))
+
+
     # urls de posteos scrapeables
     target_urls = [re.compile(r"facebook\.com\/(?:(?P<profile_id>\d+)|(?P<profile_name>[a-zA-Z0-9.]+))\/(?:posts)\/(?P<post_id>\d+)"),
                    re.compile(r"facebook\.com\/story\.php\?((?:story_fbid=(?P<post_id>\d+)))&((?:id=(?:(?P<profile_id>\d+))))"),
@@ -102,9 +106,6 @@ def get_mobile_post(driver):
     # si la url matchea con algún patron
     if any([re.search(pattern, driver.current_url) for pattern in target_urls]):
         return
-
-    if "www.facebook.com" in driver.current_url:
-        driver.get(driver.current_url.replace("www.facebook.com", "m.facebook.com"))
 
     try:
         parent_post = driver.find_element_by_css_selector('div._2vja')
