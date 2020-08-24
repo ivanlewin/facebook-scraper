@@ -26,21 +26,22 @@ def main(**kwargs):
         dest_path = get_file_path(user, output_folder)
 
         for post in post_dict[user]:
+            
             print(f"User: {user} | Post {post_dict[user].index(post)+1}/{len(post_dict[user])}")
 
             # url_dict = analyze_url(post)
 
             driver.get(post)
             get_mobile_post(driver)
-            sleep(1)
+            sleep(2)
             post_df = parse_post(driver.page_source)
 
             if comments:
-                print("Loading comments")
+                print("Cargando comentarios")
                 load_all_comments(driver)
 
                 if replies:
-                    print("Loading replies")
+                    print("Cargando respuestas")
                     load_all_replies(driver)
 
                 comments_df = scrape_comments(driver.page_source)
@@ -54,7 +55,8 @@ def main(**kwargs):
                     pass
 
             save_dataframe(post_df, dest_path)
-            print(f"Database saved: {dest_path}\n")
+            print(f"Archivo guardado: {dest_path}\n")
+            sleep(3)
 
     driver.quit()
 
