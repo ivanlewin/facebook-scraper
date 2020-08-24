@@ -140,13 +140,16 @@ def parse_post(html):
 
     soup = BeautifulSoup(html, "html.parser")
 
-    try:
-        post_caption = soup.select_one('._5rgt._5nk5').text
-    except AttributeError:  # No caption
-        try:
-            post_caption = soup.select_one('.msg > div').text  # en algunos posteos aparece así
-        except AttributeError:
-            print("Error: post_caption")
+    # pruebo distintos selectores para el caption y sino lo dejo en un string vacio
+    caption = soup.select_one('._5rgt._5nk5')
+    if caption is not None:
+        post_caption = caption.text
+    else:
+        caption = soup.select_one('.msg > div')
+        if caption is not None:
+            post_caption = caption.text
+        else:
+            post_caption = ""
 
     try:
         shares = soup.select_one('div._43lx._55wr a')
