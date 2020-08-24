@@ -176,21 +176,21 @@ def parse_post(html):
         owner = soup.select_one('div._5rgr')
         owner = json.loads(owner['data-store'])
 
-        post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
-        post_author_id = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
         timestamp = re.search(r'"publish_time":(\d+)', owner['linkdata'])[1]
         post_created_time = datetime.fromtimestamp(int(timestamp))
+        post_id = re.search(r'mf_story_key.(\d+)', owner['linkdata'])[1]
+        post_author_id = re.search(r'content_owner_id_new.(\d+)', owner['linkdata'])[1]
 
     except (IndexError, TypeError, KeyError):  # algunos posteos tienen otra estructura
         try:
-            owner = soup.select_one('div._57-o')
-            owner = json.loads(owner["data-store"])
-
-            post_id = owner["object_id"]
-            post_author_id = owner["owner_id"]
             timestamp = soup.select_one('div._2vja > abbr[data-sigil="timestamp"]')
             timestamp = json.loads(timestamp["data-store"])
             post_created_time = datetime.fromtimestamp(int(timestamp["time"]))
+
+            owner = soup.select_one('div._57-o')
+            owner = json.loads(owner["data-store"])
+            post_id = owner["object_id"]
+            post_author_id = owner["owner_id"]
 
         except (IndexError, TypeError, KeyError):
             print("Error: post_id | post_author_id | post_created_time")
